@@ -1,0 +1,49 @@
+name: Instagram Scheduler
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-scheduler
+  cancel-in-progress: false
+
+jobs:
+  publish-due-reel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Publish due Reel
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_DRIVE_CONNECTION_JSON: ${{ secrets.GOOGLE_DRIVE_CONNECTION_JSON }}
+          INSTAGRAM_ACCOUNTS_JSON: ${{ secrets.INSTAGRAM_ACCOUNTS_JSON }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_BUCKET: instagram-reels
+        run: node scripts/github-scheduled-publisher.mjs
+
+      - name: Commit queue state
+        run: |
+          git config user.name "instagram-scheduler"
+          git config user.email "instagram-scheduler@users.noreply.github.com"
+          git add cloud-upload-queue.json
+          if git diff --cached --quiet; then
+            echo "No queue changes to commit."
+          else
+            git commit -m "Update Instagram scheduler queue"
+            git push
+          fi
