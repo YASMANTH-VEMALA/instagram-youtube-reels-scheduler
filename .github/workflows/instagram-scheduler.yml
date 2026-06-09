@@ -1,4 +1,5 @@
 name: Instagram Scheduler
+# Runs one due Reel every 3 hours without keeping a server awake.
 
 on:
   workflow_dispatch:
