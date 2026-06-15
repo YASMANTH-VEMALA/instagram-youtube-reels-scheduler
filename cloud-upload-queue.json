@@ -322,9 +322,10 @@
     "id": "2f6056cd-e685-47a0-abd7-a57ceada4389",
     "status": "scheduled",
     "detectedAt": "2026-06-09T05:54:35.328Z",
-    "updatedAt": "2026-06-09T07:01:03.248Z",
-    "attempts": 0,
-    "scheduledAt": "2026-06-11T06:30:00.000Z"
+    "updatedAt": "2026-06-15T00:41:32.349Z",
+    "attempts": 1,
+    "scheduledAt": "2026-06-11T06:30:00.000Z",
+    "error": "Error validating access token: The session has been invalidated because the user changed their password or Facebook has changed the session for security reasons."
   },
   {
     "driveFileId": "1VYa06C0YdWvQFRJFfe8IkiU14PJeHJm9",
