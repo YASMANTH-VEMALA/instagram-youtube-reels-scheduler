@@ -1,0 +1,69 @@
+services:
+  # Next.js Web Dashboard Service
+  - type: web
+    name: instagram-clipper-web
+    env: docker
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    plan: free # or starter
+    buildCommand: "" # Build occurs inside Dockerfile
+    startCommand: "npm run start"
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: instagram-clipper-db
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: clips
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: APP_USER_EMAIL
+        value: admin@clipping.com
+      - key: APP_USER_PASSWORD_HASH
+        sync: false
+      - key: YTDLP_COOKIES_PATH
+        value: ""
+
+  # Background Worker Service
+  - type: worker
+    name: instagram-clipper-worker
+    env: docker
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    plan: free # or starter
+    buildCommand: "" # Build occurs inside Dockerfile
+    startCommand: "npx tsx worker/index.ts"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: instagram-clipper-db
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: clips
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: APP_USER_EMAIL
+        value: admin@clipping.com
+      - key: APP_USER_PASSWORD_HASH
+        sync: false
+      - key: YTDLP_COOKIES_PATH
+        value: ""
+
+databases:
+  - name: instagram-clipper-db
+    plan: free
+    postgresMajorVersion: 15

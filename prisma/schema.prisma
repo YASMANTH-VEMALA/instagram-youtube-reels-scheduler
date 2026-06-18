@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  channels     Channel[]
+  posts        Post[]
+  createdAt    DateTime  @default(now())
+}
+
+model Channel {
+  id                      String    @id @default(cuid())
+  name                    String
+  igUserId                String
+  accessToken             String    // stored encrypted at rest (AES-256-GCM)
+  tokenExpiresAt          DateTime?
+  captionTemplate         String    @default("")
+  hashtags                String    @default("")
+  watermarkUrl            String?
+  watermarkPosition       String    @default("bottom-right") // top-left | top-right | bottom-left | bottom-right | center
+  watermarkEnabledDefault Boolean   @default(true)
+  monsterlabCampaignId    String?   // MonsterLab Campaign ID (e.g. for political clipping)
+  posts                   Post[]
+  
+  // Scoped to User
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String
+  createdAt               DateTime  @default(now())
+}
+
+model Post {
+  id                String    @id @default(cuid())
+  channel           Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId         String
+  
+  // Scoped to User
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  
+  sourceUrl         String
+  status            String    @default("queued") // queued | downloading | processing | uploading | publishing | published | failed
+  caption           String    @default("")
+  watermark         Boolean   @default(true)
+  processedVideoUrl String?
+  igCreationId      String?
+  igMediaId         String?
+  scheduledAt       DateTime?
+  publishedAt       DateTime?
+  error             String?
+  attempts          Int       @default(0)
+  monsterlabClipId  String?   // Submitted Clip ID on MonsterLab
+  monsterlabStatus  String?   // active | pending | rejected
+  monsterlabViews   Int?      // views on MonsterLab
+  monsterlabEarnings Float?   // earnings on MonsterLab
+  createdAt         DateTime  @default(now())
+  logs              PostLog[]
+}
+
+model PostLog {
+  id        String   @id @default(cuid())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  step      String   // downloading | processing | uploading | publishing | published | failed
+  message   String
+  level     String   @default("info") // info | warn | error | success
+  createdAt DateTime @default(now())
+
+  @@index([postId, createdAt])
+}
