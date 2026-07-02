@@ -1148,10 +1148,10 @@
     "targetAccountId": "17841431733514653",
     "caption": "Stop scrolling. This exercise targets 3664895088736510601 10211455878 in under 30 seconds.\n\nSave this for your next workout.\n\n#fitness #workout #gymtips #exercise #homeworkout #reelsindia",
     "id": "efd17852-6983-408d-8e40-e04b58ce186c",
-    "status": "scheduled",
+    "status": "failed",
     "detectedAt": "2026-06-09T05:54:35.328Z",
-    "updatedAt": "2026-07-02T07:06:01.622Z",
-    "attempts": 2,
+    "updatedAt": "2026-07-02T10:02:07.851Z",
+    "attempts": 3,
     "scheduledAt": "2026-06-17T00:30:00.000Z",
     "error": "Error validating access token: The session has been invalidated because the user changed their password or Facebook has changed the session for security reasons."
   },
