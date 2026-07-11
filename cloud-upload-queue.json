@@ -1618,8 +1618,8 @@
     "id": "9720e7ec-ee39-4ff6-ad84-227041fb7106",
     "status": "scheduled",
     "detectedAt": "2026-06-09T05:54:35.328Z",
-    "updatedAt": "2026-07-11T18:17:18.949Z",
-    "attempts": 1,
+    "updatedAt": "2026-07-11T21:16:15.702Z",
+    "attempts": 2,
     "scheduledAt": "2026-06-20T06:30:00.000Z",
     "error": "Error validating access token: The session has been invalidated because the user changed their password or Facebook has changed the session for security reasons."
   },
